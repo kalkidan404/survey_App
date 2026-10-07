@@ -1,0 +1,57 @@
+datasource db {
+    provider = "postgresql"
+}
+
+model User {
+    id        String     @id @default(cuid())
+    email     String     @unique
+    password  String
+    surveys   Survey[]
+    responses Response[]
+}
+
+model Survey {
+    id        String     @id @default(cuid())
+    userId    String
+    questions Question[]
+    title     String
+    user      User       @relation(fields: [userId], references: [id])
+    responses Response[]
+}
+
+model Question {
+    id       String   @id @default(cuid())
+    text     String
+    title    String
+    surveyId String
+    answers  Answer[]
+    Options  Option[]
+
+    survey Survey @relation(fields: [surveyId], references: [id])
+}
+
+model Option {
+    id         String   @id @default(cuid())
+    text       String
+    questionId String
+    question   Question @relation(fields: [questionId], references: [id])
+}
+
+model Response {
+    id       String   @id @default(cuid())
+    surveyId String
+    userId   String
+    answers  Answer[]
+    survey   Survey   @relation(fields: [surveyId], references: [id])
+
+    user User @relation(fields: [userId], references: [id])
+}
+
+model Answer {
+    id         String   @id @default(cuid())
+    responseId String
+    text       String
+    questionId String
+    question   Question @relation(fields: [questionId], references: [id])
+    response   Response @relation(fields: [responseId], references: [id])
+}
