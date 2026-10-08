@@ -4,8 +4,9 @@ import prisma from "../config/prisma.js";
 // addAnswer
 const addAnswer = async (req, res, next) => {
   try {
-    const { responseId, questionId, text } = req.body;
-
+    
+const { responseId, questionId } = req.params;
+    const { text } = req.body;
     const answer = await prisma.answer.create({
       data: {
         responseId,

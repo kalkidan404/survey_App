@@ -4,7 +4,7 @@ import prisma from "../config/prisma.js";
 // createResponse
 const createResponse = async (req, res, next) => {
   try {
-    const { surveyId } = req.body;
+    const { surveyId } = req.params;
 
     const response = await prisma.response.create({
       data: {

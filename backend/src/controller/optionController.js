@@ -4,7 +4,8 @@ import prisma from "../config/prisma.js";
 // addOption
 const addOption = async (req, res, next) => {
   try {
-    const { text, questionId } = req.body;
+    const { text } = req.body;
+    const {questionId}=req.params;
 
     const option = await prisma.option.create({
       data: {
