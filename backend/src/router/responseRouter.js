@@ -8,13 +8,14 @@ import {
   getResponseById,
   deleteResponse,
 } from "../controller/responseController.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
-route.post("/survey/:surveyId", createResponse);
+route.post("/survey/:surveyId",authMiddleware, createResponse);
 
-route.get("/", getMyResponses);
+route.get("/",authMiddleware, getMyResponses);
 
-route.get("/:id", getResponseById);
+route.get("/:id",authMiddleware, getResponseById);
 
-route.delete("/:id", deleteResponse);
+route.delete("/:id",authMiddleware, deleteResponse);
 
 export { route };

@@ -7,9 +7,10 @@ import  {
   updateSurvey,
   deleteSurvey,
 } from "../controller/surveyController.js";
-route.post("/", createSurvey);
-route.get("/", getMySurveys);
+import authMiddleware from "../middleware/authMiddleware.js";
+route.post("/",authMiddleware, createSurvey);
+route.get("/",authMiddleware, getMySurveys);
 route.get("/:id", getSurveyById);
-route.put("/:id", updateSurvey);
-route.delete("/:id", deleteSurvey);
+route.put("/:id",authMiddleware, updateSurvey);
+route.delete("/:id",authMiddleware, deleteSurvey);
 export{route}

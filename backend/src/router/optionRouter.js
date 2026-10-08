@@ -8,13 +8,14 @@ import {
   deleteOption,
   getOptions,
 } from "../controller/optionController.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
-route.post("/question/:questionId", addOption);
+route.post("/question/:questionId",authMiddleware, addOption);
 
-route.get("/question/:questionId", getOptions);
+route.get("/question/:questionId",authMiddleware, getOptions);
 
-route.put("/:id", updateOption);
+route.put("/:id",authMiddleware, updateOption);
 
-route.delete("/:id", deleteOption);
+route.delete("/:id",authMiddleware, deleteOption);
 
 export { route };

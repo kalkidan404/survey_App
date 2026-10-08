@@ -8,13 +8,13 @@ import {
   updateAnswer,
   deleteAnswer,
 } from "../controller/answerController.js";
+import authMiddleware from "../middleware/authMiddleware.js";
+route.post("/response/:responseId",authMiddleware, addAnswer);
 
-route.post("/response/:responseId", addAnswer);
+route.get("/:id",authMiddleware, getAnswer);
 
-route.get("/:id", getAnswer);
+route.put("/:id",authMiddleware, updateAnswer);
 
-route.put("/:id", updateAnswer);
-
-route.delete("/:id", deleteAnswer);
+route.delete("/:id",authMiddleware, deleteAnswer);
 
 export { route };

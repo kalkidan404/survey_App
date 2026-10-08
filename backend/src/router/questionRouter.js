@@ -6,7 +6,8 @@ import {
   updateQuestion,
   deleteQuestion,
 } from "../controller/questionController.js"
-route.post("/", addQuestion)
-route.put("/:id", updateQuestion)
-route.delete("/:id", deleteQuestion)
+import authMiddleware from "../middleware/authMiddleware.js"
+route.post("/",authMiddleware, addQuestion)
+route.put("/:id",authMiddleware, updateQuestion)
+route.delete("/:id",authMiddleware, deleteQuestion)
 export{route}
