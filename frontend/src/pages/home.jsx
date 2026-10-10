@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 function Home() {
   const [user, setUser] = useState(null);
+  const [search, setSearch] = useState("");
   const [surveys, setSurveys] = useState([]);
   const [recentSurveys, setRecentSurveys] = useState([]);
   const [dashboardData, setDashboardData] = useState({
@@ -87,8 +88,11 @@ function Home() {
     }
   };
 
-  const displayedSurveys = showAll ? surveys : recentSurveys;
-
+  
+const displayedSurveys = (showAll ? surveys : recentSurveys).filter(
+  (survey) =>
+    survey.title.toLowerCase().includes(search.toLowerCase())
+);
   return (
     <main>
       <h2>Welcome back{user?.name ? `, ${user.name}` : ""}!</h2>
@@ -106,9 +110,10 @@ function Home() {
           <p>{dashboardData.responsesReceived}</p>
         </div>
       </section>
-
+    
       <section>
         <h3>Your Surveys</h3>
+        <input type="text" placeholder="Search surveys..." value={search} onChange={(e) => setSearch(e.target.value)} />
 
         {displayedSurveys.length === 0 ? (
           <p>You haven't created any surveys yet.</p>
@@ -142,4 +147,4 @@ function Home() {
   );
 }
 
-export { Home };
+export default Home ;

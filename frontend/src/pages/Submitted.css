@@ -1,0 +1,169 @@
+
+.submitted {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 32px 20px;
+  background-color: #000000;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+}
+
+.submitted__card {
+  width: 100%;
+  max-width: 520px;
+  padding: 44px 36px;
+  border: 1px solid #292929;
+  border-radius: 18px;
+  background-color: #111111;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Success icon */
+.submitted__icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 28px;
+  border: 1px solid rgb(198 255 51 / 30%);
+  border-radius: 50%;
+  background-color: rgb(198 255 51 / 10%);
+  color: #c6ff33;
+}
+
+.submitted__icon svg {
+  width: 38px;
+  height: 38px;
+}
+
+/* Heading */
+.submitted__eyebrow {
+  margin: 0 0 14px;
+  color: #c6ff33;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.submitted__title {
+  margin: 0 0 16px;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.7px;
+}
+
+.submitted__description {
+  max-width: 390px;
+  margin: 0 auto;
+  color: #999999;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+/* Survey information */
+.submitted__survey {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 28px;
+  padding: 18px;
+  border: 1px solid #292929;
+  border-radius: 10px;
+  background-color: #080808;
+}
+
+.submitted__survey-label {
+  color: #999999;
+  font-size: 12px;
+}
+
+.submitted__survey-title {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+/* Divider and note */
+.submitted__divider {
+  height: 1px;
+  margin: 30px 0 22px;
+  background-color: #292929;
+}
+
+.submitted__note {
+  margin: 0 0 26px;
+  color: #999999;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* Home button */
+.submitted__button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 8px;
+  background-color: #c6ff33;
+  color: #000000;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  box-sizing: border-box;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.submitted__button:hover {
+  background-color: #b5ed25;
+  transform: translateY(-2px);
+}
+
+/* Footer */
+.submitted__footer {
+  margin: 24px 0 0;
+  color: #666666;
+  font-size: 12px;
+}
+
+.submitted__footer span {
+  color: #c6ff33;
+  font-weight: 700;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .submitted {
+    padding: 24px 16px;
+  }
+
+  .submitted__card {
+    padding: 34px 22px;
+  }
+
+  .submitted__icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 24px;
+  }
+
+  .submitted__icon svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .submitted__title {
+    font-size: 25px;
+  }
+
+  .submitted__description {
+    font-size: 14px;
+  }
+}
