@@ -14,13 +14,17 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+import { route as surveyRoutes } from "./routes/surveyRoutes.js";
+import { route as dashboardRoutes } from "./routes/dashboardRoutes.js";
 
-app.use("/api/users", userRoutes);
-app.use("/api/surveys", surveyRoutes);
-app.use("/api/questions", questionRoutes);
-app.use("/api/options", optionRoutes);
-app.use("/api/responses", responseRoutes);
-app.use("/api/answers", answerRoutes);
+app.use("/surveys", surveyRoutes);
+app.use("/dashboard", dashboardRoutes);
+app.use("/users", userRoutes);
+app.use("/surveys", surveyRoutes);
+app.use("/questions", questionRoutes);
+app.use("/options", optionRoutes);
+app.use("/responses", responseRoutes);
+app.use("/answers", answerRoutes);
 
 app.use(errorMiddleware);
 
