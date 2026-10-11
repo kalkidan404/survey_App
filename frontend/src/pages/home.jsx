@@ -155,10 +155,14 @@ Welcome back{user?.firstName ? `, ${user.firstName}` : ""}!! </h2> </div>
                   </h4>
 
                   <div className="home__survey-meta">
-                    <span>
-                      {survey._count?.responses ?? 0} responses
-                    </span>
-                  </div>
+  <Link
+    to={`/surveys/${survey.id}/responses`}
+    className="home__section-link"
+  >
+    {survey._count?.responses ?? 0} responses →
+  </Link>
+</div>
+
                 </div>
               </div>
             ))}
