@@ -113,7 +113,7 @@ const getSurveyResponses = async (req, res, next) => {
         answers: {
           include: {
             question: true,
-            option: true,
+            
           },
         },
       },
