@@ -7,10 +7,9 @@ import {
   getMyResponses,
   getResponseById,
   deleteResponse,
-  getSurveyResponses
 } from "../controller/responseController.js";
 import authMiddleware from "../middleware/authMiddleware.js";
-route.get("/:surveyId/responses", authMiddleware, getSurveyResponses);
+
 route.post("/survey/:surveyId",authMiddleware, createResponse);
 
 route.get("/",authMiddleware, getMyResponses);

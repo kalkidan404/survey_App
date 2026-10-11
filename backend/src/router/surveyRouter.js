@@ -9,7 +9,7 @@ import {
   updateSurvey,
   deleteSurvey,
 } from "../controller/surveyController.js";
-
+import { getSurveyResponses } from "../controller/responseController.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 
 const route = express.Router();
@@ -19,7 +19,7 @@ route.post("/", authMiddleware, createSurvey);
 
 // Get all surveys belonging to the logged-in user
 route.get("/", authMiddleware, getMySurveys);
-
+route.get("/:surveyId/responses", authMiddleware, getSurveyResponses);
 // Get the six most recent surveys
 route.get("/recent", authMiddleware, getRecentSurveys);
 
