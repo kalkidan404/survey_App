@@ -1,4 +1,3 @@
-//the questions to b answered found through reply
 
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -113,7 +112,7 @@ function Response() {
             <h3>No responses yet</h3>
 
             <p>
-              When people complete your survey, their responses
+              When people complete your survey, their answers
               will appear here.
             </p>
           </div>
@@ -128,57 +127,51 @@ function Response() {
                   key={item.id || index}
                 >
                   <div className="responses__card-header">
-                    <div className="responses__respondent">
-                      <div className="responses__avatar">
-                        {index + 1}
-                      </div>
+                    <div>
+                      <h3 className="responses__respondent-name">
+                        Response {index + 1}
+                      </h3>
 
-                      <div>
-                        <h3 className="responses__respondent-name">
-                          Respondent {index + 1}
-                        </h3>
-
-                        <p className="responses__date">
-                          {item.createdAt
-                            ? new Date(
-                                item.createdAt
-                              ).toLocaleString()
-                            : "Submission date unavailable"}
-                        </p>
-                      </div>
+                      <p className="responses__date">
+                        {item.createdAt
+                          ? new Date(item.createdAt).toLocaleString()
+                          : "Submission date unavailable"}
+                      </p>
                     </div>
-
-                    <span className="responses__badge">
-                      Submitted
-                    </span>
                   </div>
 
                   <div className="responses__answers">
                     {answers.length === 0 ? (
                       <p className="responses__no-answers">
-                        No answers available for this response.
+                        No answers were saved for this response.
                       </p>
                     ) : (
-                      answers.map((answer, answerIndex) => (
-                        <div
-                          className="responses__answer"
-                          key={answer.id || answerIndex}
-                        >
-                          <h4 className="responses__question">
-                            {answer.question?.text ||
-                              answer.questionText ||
-                              `Question ${answerIndex + 1}`}
-                          </h4>
+                      answers.map((answer, answerIndex) => {
+                        const answerValue =
+                          answer.value ?? answer.text;
 
-                          <p className="responses__answer-text">
-                            {Array.isArray(answer.value)
-                              ? answer.value.join(", ")
-                              : answer.value ??
-                                answer.text ??
-                                "No answer provided"}
-                          </p>
-                        </div>
-                      ))
+                        return (
+                          <div
+                            className="responses__answer"
+                            key={answer.id || answerIndex}
+                          >
+                            <h4 className="responses__question">
+                              {answer.question?.text ||
+                                answer.question?.title ||
+                                `Question ${answerIndex + 1}`}
+                            </h4>
+
+                            <p className="responses__answer-text">
+                              {Array.isArray(answerValue)
+                                ? answerValue.join(", ")
+                                : answerValue != null &&
+                                    answerValue !== ""
+                                  ? String(answerValue)
+                                  : "No answer provided"}
+                            </p>
+                          </div>
+                        );
+                      })
                     )}
                   </div>
                 </article>
