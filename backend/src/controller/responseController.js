@@ -37,6 +37,7 @@ const getMyResponses = async (req, res, next) => {
 
 
 // getResponseById
+
 const getResponseById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -45,14 +46,28 @@ const getResponseById = async (req, res, next) => {
       where: {
         id,
       },
+      include: {
+        answers: {
+          include: {
+            question: true,
+            option: true,
+          },
+        },
+        survey: true,
+      },
     });
+
+    if (!response) {
+      return res.status(404).json({
+        message: "Response not found",
+      });
+    }
 
     return res.status(200).json({ response });
   } catch (error) {
     next(error);
   }
 };
-
 
 // deleteResponse
 const deleteResponse = async (req, res, next) => {
@@ -73,10 +88,54 @@ const deleteResponse = async (req, res, next) => {
   }
 };
 
+const getSurveyResponses = async (req, res, next) => {
+  try {
+    const { surveyId } = req.params;
+
+    const survey = await prisma.survey.findFirst({
+      where: {
+        id: surveyId,
+        userId: req.user.id,
+      },
+    });
+
+    if (!survey) {
+      return res.status(404).json({
+        message: "Survey not found",
+      });
+    }
+
+    const responses = await prisma.response.findMany({
+      where: {
+        surveyId,
+      },
+      include: {
+        answers: {
+          include: {
+            question: true,
+            option: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return res.status(200).json({
+      survey,
+      responses,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 export {
   createResponse,
   getMyResponses,
   getResponseById,
   deleteResponse,
+  getSurveyResponses
 };
