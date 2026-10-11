@@ -68,4 +68,4 @@ function SideSetting() {
   );
 }
 
-export { SideSetting };
+export default SideSetting ;
