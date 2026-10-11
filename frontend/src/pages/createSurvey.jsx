@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { QuestionCard } from "../components/QuestionCard";
 import "./CreateSurvey.css";
 import "../components/sideSetting"
-import { SideSetting } from "../components/sideSetting";
+import  SideSetting  from "../components/sideSetting";
 function CreateSurvey() {
   const navigate = useNavigate();
 

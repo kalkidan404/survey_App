@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import "./Response.css";
-import { SideSetting } from "../components/sideSetting";
+import  SideSetting from "../components/sideSetting";
 function Response() {
   const { id } = useParams();
 
