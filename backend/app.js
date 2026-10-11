@@ -1,3 +1,4 @@
+
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -15,14 +16,18 @@ import errorMiddleware from "./src/middleware/errorMiddleware.js";
 const app = express();
 
 app.use(
-cors({
-origin: "http://localhost:5173",
-credentials: true,
-})
+  cors({
+    origin: true,
+    credentials: true,
+  })
 );
 
 app.use(express.json());
 app.use(cookieParser());
+
+app.get("/", (req, res) => {
+  res.send("FormIt API is running!");
+});
 
 app.use("/dashboard", dashboardRoutes);
 app.use("/users", userRoutes);
