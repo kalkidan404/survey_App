@@ -77,15 +77,13 @@ const getRecentSurveys = async (req, res, next) => {
 };
 
 // Get one survey by ID
+
 const getSurveyById = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const survey = await prisma.survey.findFirst({
-      where: {
-        id,
-        userId: req.user.id,
-      },
+    const survey = await prisma.survey.findUnique({
+      where: { id },
       include: {
         questions: {
           include: {
