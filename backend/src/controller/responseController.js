@@ -5,11 +5,25 @@ import prisma from "../config/prisma.js";
 const createResponse = async (req, res, next) => {
   try {
     const { surveyId } = req.params;
+    const { answers } = req.body;
 
     const response = await prisma.response.create({
       data: {
         surveyId,
         userId: req.user.id,
+
+        answers: {
+          create: (answers || []).map((answer) => ({
+            questionId: answer.questionId,
+
+            text: Array.isArray(answer.value)
+              ? answer.value.join(", ")
+              : String(answer.value ?? ""),
+          })),
+        },
+      },
+      include: {
+        answers: true,
       },
     });
 
@@ -18,8 +32,6 @@ const createResponse = async (req, res, next) => {
     next(error);
   }
 };
-
-
 // getMyResponses
 const getMyResponses = async (req, res, next) => {
   try {
