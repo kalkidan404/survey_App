@@ -126,29 +126,13 @@ function Response() {
                   className="responses__card"
                   key={item.id || index}
                 >
-                  <summary className="responses__card-header">
-                    <div className="responses__respondent">
-                      <div className="responses__avatar">
-                        {index + 1}
-                      </div>
+                  
+<summary className="responses__card-header">
+  <h3 className="responses__respondent-name">
+    Response {index + 1}
+  </h3>
+</summary>
 
-                      <div>
-                        <h3 className="responses__respondent-name">
-                          Response {index + 1}
-                        </h3>
-
-                        <p className="responses__date">
-                          {item.createdAt
-                            ? new Date(item.createdAt).toLocaleString()
-                            : "Submission date unavailable"}
-                        </p>
-                      </div>
-                    </div>
-
-                    <span className="responses__expand">
-                      View answers ↓
-                    </span>
-                  </summary>
 
                   <div className="responses__answers">
                     {answers.length === 0 ? (
