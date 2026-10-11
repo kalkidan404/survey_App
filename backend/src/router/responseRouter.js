@@ -10,7 +10,7 @@ import {
 } from "../controller/responseController.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 
-route.post("/survey/:surveyId",authMiddleware, createResponse);
+route.post("/survey/:surveyId", createResponse);
 
 route.get("/",authMiddleware, getMyResponses);
 
