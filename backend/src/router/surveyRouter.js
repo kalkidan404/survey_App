@@ -23,7 +23,7 @@ route.get("/:surveyId/responses", authMiddleware, getSurveyResponses);
 // Get the six most recent surveys
 route.get("/recent", authMiddleware, getRecentSurveys);
 // Get one of the logged-in user's surveys
-route.get("/:id", authMiddleware, getSurveyById);
+route.get("/:id",  getSurveyById);
 
 // Update a survey
 route.put("/:id", authMiddleware, updateSurvey);
