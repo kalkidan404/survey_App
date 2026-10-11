@@ -1,7 +1,7 @@
 
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import "./SideSetting.css";
+import "./sideSetting.css";
 
 function SideSetting() {
   const navigate = useNavigate();
