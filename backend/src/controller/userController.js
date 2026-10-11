@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 
 import bcrypt from "bcrypt";
 import prisma from "../config/prisma.js";
@@ -68,54 +69,67 @@ const getme = async (req, res, next) => {
 };
 
 // LOGIN
-const login = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({
-        message: "Email and password are required",
-      });
-    }
+   
+   const login = async (req, res, next) => {
+try {
+const { email, password } = req.body;
 
-    const user = await prisma.user.findUnique({
-      where: {
-        email,
-      },
-    });
 
-    if (!user) {
-      return res.status(401).json({
-        message: "Invalid email or password",
-      });
-    }
+if (!email || !password) {
+  return res.status(400).json({
+    message: "Email and password are required",
+  });
+}
 
-    const isPasswordCorrect = await bcrypt.compare(
-      password,
-      user.password
-    );
+const user = await prisma.user.findUnique({
+  where: { email },
+});
 
-    if (!isPasswordCorrect) {
-      return res.status(401).json({
-        message: "Invalid email or password",
-      });
-    }
+if (!user) {
+  return res.status(401).json({
+    message: "Invalid email or password",
+  });
+}
 
-    // Create the JWT and set it in a cookie here
-    // if your login flow uses JWT authentication.
+const isPasswordCorrect = await bcrypt.compare(
+  password,
+  user.password
+);
 
-    return res.status(200).json({
-      message: "Login successful",
-      user: {
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
+if (!isPasswordCorrect) {
+  return res.status(401).json({
+    message: "Invalid email or password",
+  });
+}
+
+const token = jwt.sign(
+  { id: user.id },
+  process.env.JWT_SECRET,
+  { expiresIn: "1d" }
+);
+
+res.cookie("token", token, {
+  httpOnly: true,
+  secure: false,
+  sameSite: "lax",
+  maxAge: 24 * 60 * 60 * 1000,
+});
+
+return res.status(200).json({
+  message: "Login successful",
+  user: {
+    id: user.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+  },
+});
+
+
+} catch (error) {
+next(error);
+}
 };
 
 // LOGOUT

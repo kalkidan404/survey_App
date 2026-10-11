@@ -1,4 +1,5 @@
-//template to put question in
+
+// template to put question in
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -38,20 +39,31 @@ function CreateSurvey() {
       return;
     }
 
+    const questionOptions =
+      questionType === "MULTIPLE_CHOICE" ||
+      questionType === "CHECKBOX"
+        ? options
+            .filter((option) => option.trim())
+            .map((option, index) => ({
+              id: `${index}`,
+              text: option.trim(),
+            }))
+        : [];
+
+    if (
+      (questionType === "MULTIPLE_CHOICE" ||
+        questionType === "CHECKBOX") &&
+      questionOptions.length < 2
+    ) {
+      alert("Please add at least two answer options.");
+      return;
+    }
+
     const question = {
       id: crypto.randomUUID(),
       text: questionText.trim(),
       type: questionType,
-      options:
-        questionType === "MULTIPLE_CHOICE" ||
-        questionType === "CHECKBOX"
-          ? options
-              .filter((option) => option.trim())
-              .map((option, index) => ({
-                id: `${index}`,
-                text: option.trim(),
-              }))
-          : [],
+      options: questionOptions,
     };
 
     setQuestions((currentQuestions) => [
@@ -65,12 +77,15 @@ function CreateSurvey() {
   };
 
   const editQuestion = (questionId) => {
-    const question = questions.find((item) => item.id === questionId);
+    const question = questions.find(
+      (item) => item.id === questionId
+    );
 
     if (!question) return;
 
     setQuestionText(question.text);
     setQuestionType(question.type);
+
     setOptions(
       question.options.length > 0
         ? question.options.map((option) => option.text)
@@ -84,45 +99,94 @@ function CreateSurvey() {
 
   const deleteQuestion = (questionId) => {
     setQuestions((currentQuestions) =>
-      currentQuestions.filter((question) => question.id !== questionId)
+      currentQuestions.filter(
+        (question) => question.id !== questionId
+      )
     );
   };
 
   const createSurvey = async () => {
-    if (!title.trim()) {
-      alert("Please enter a survey title.");
-      return;
-    }
-
-    if (questions.length === 0) {
-      alert("Please add at least one question.");
-      return;
-    }
-
     try {
-      const response = await fetch(
+      if (!title.trim()) {
+        alert("Please enter a survey title.");
+        return;
+      }
+
+      if (questions.length === 0) {
+        alert("Please add at least one question.");
+        return;
+      }
+
+      const surveyResponse = await fetch(
         `${import.meta.env.VITE_API_URL}/surveys`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           credentials: "include",
           body: JSON.stringify({ title: title.trim() }),
         }
       );
 
-      const data = await response.json();
+      const surveyData = await surveyResponse.json();
 
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to create survey.");
+      if (!surveyResponse.ok) {
+        throw new Error(
+          surveyData.message || "Failed to create survey."
+        );
       }
 
-      // The survey is created. Questions still need their own API endpoint.
-      navigate(`/surveys/${data.survey.id}`);
+      const surveyId = surveyData.survey.id;
+
+      for (const question of questions) {
+        const questionResponse = await fetch(
+          `${import.meta.env.VITE_API_URL}/questions`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({
+              surveyId,
+              title: question.text,
+              text: question.text,
+            }),
+          }
+        );
+
+        const questionData = await questionResponse.json();
+
+        if (!questionResponse.ok) {
+          throw new Error(
+            questionData.message || "Failed to save question."
+          );
+        }
+
+        const questionId = questionData.question.id;
+
+        for (const option of question.options) {
+          const optionResponse = await fetch(
+            `${import.meta.env.VITE_API_URL}/options/question/${questionId}`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              credentials: "include",
+              body: JSON.stringify({ text: option.text }),
+            }
+          );
+
+          const optionData = await optionResponse.json();
+
+          if (!optionResponse.ok) {
+            throw new Error(
+              optionData.message || "Failed to save option."
+            );
+          }
+        }
+      }
+
+      navigate(`/surveys/${surveyId}`);
     } catch (error) {
-      console.error("Failed to create survey:", error);
-      alert(error.message || "Something went wrong.");
+      console.error(error);
+      alert(error.message || "Failed to create survey.");
     }
   };
 
@@ -136,7 +200,10 @@ function CreateSurvey() {
       </header>
 
       <section className="create-survey__details">
-        <label htmlFor="survey-title" className="create-survey__label">
+        <label
+          htmlFor="survey-title"
+          className="create-survey__label"
+        >
           Survey Title
         </label>
 
@@ -151,9 +218,14 @@ function CreateSurvey() {
       </section>
 
       <section className="create-survey__question-form">
-        <h2 className="create-survey__section-title">Add a Question</h2>
+        <h2 className="create-survey__section-title">
+          Add a Question
+        </h2>
 
-        <label htmlFor="question-text" className="create-survey__label">
+        <label
+          htmlFor="question-text"
+          className="create-survey__label"
+        >
           Question
         </label>
 
@@ -166,7 +238,10 @@ function CreateSurvey() {
           onChange={(event) => setQuestionText(event.target.value)}
         />
 
-        <label htmlFor="question-type" className="create-survey__label">
+        <label
+          htmlFor="question-type"
+          className="create-survey__label"
+        >
           Question Type
         </label>
 
@@ -184,10 +259,15 @@ function CreateSurvey() {
         {(questionType === "MULTIPLE_CHOICE" ||
           questionType === "CHECKBOX") && (
           <div className="create-survey__options">
-            <label className="create-survey__label">Answer Options</label>
+            <label className="create-survey__label">
+              Answer Options
+            </label>
 
             {options.map((option, index) => (
-              <div className="create-survey__option-row" key={index}>
+              <div
+                className="create-survey__option-row"
+                key={index}
+              >
                 <input
                   className="create-survey__input"
                   type="text"
@@ -267,4 +347,4 @@ function CreateSurvey() {
   );
 }
 
-export default CreateSurvey ;
+export default CreateSurvey;
