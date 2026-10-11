@@ -13,7 +13,7 @@ import { getSurveyResponses } from "../controller/responseController.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 
 const route = express.Router();
-
+console.log("SURVEY ROUTER LOADED");
 // Create a survey
 route.post("/", authMiddleware, createSurvey);
 
