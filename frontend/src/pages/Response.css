@@ -255,6 +255,32 @@
   color: #ff7777;
   font-size: 15px;
 }
+.responses__card > summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.responses__card > summary::-webkit-details-marker {
+  display: none;
+}
+
+.responses__expand {
+  color: #c6ff33;
+  font-size: 0.875rem;
+}
+
+.responses__card[open] .responses__expand {
+  font-size: 0;
+}
+
+.responses__card[open] .responses__expand::after {
+  content: "Hide answers ↑";
+  font-size: 0.875rem;
+}
+
+.responses__answers {
+  padding: 1rem 1.25rem;
+}
 
 /* Responsive design */
 @media (max-width: 768px) {

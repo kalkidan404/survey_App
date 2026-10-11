@@ -122,28 +122,38 @@ function Response() {
               const answers = item.answers || [];
 
               return (
-                <article
+                <details
                   className="responses__card"
                   key={item.id || index}
                 >
-                  <div className="responses__card-header">
-                    <div>
-                      <h3 className="responses__respondent-name">
-                        Response {index + 1}
-                      </h3>
+                  <summary className="responses__card-header">
+                    <div className="responses__respondent">
+                      <div className="responses__avatar">
+                        {index + 1}
+                      </div>
 
-                      <p className="responses__date">
-                        {item.createdAt
-                          ? new Date(item.createdAt).toLocaleString()
-                          : "Submission date unavailable"}
-                      </p>
+                      <div>
+                        <h3 className="responses__respondent-name">
+                          Response {index + 1}
+                        </h3>
+
+                        <p className="responses__date">
+                          {item.createdAt
+                            ? new Date(item.createdAt).toLocaleString()
+                            : "Submission date unavailable"}
+                        </p>
+                      </div>
                     </div>
-                  </div>
+
+                    <span className="responses__expand">
+                      View answers ↓
+                    </span>
+                  </summary>
 
                   <div className="responses__answers">
                     {answers.length === 0 ? (
                       <p className="responses__no-answers">
-                        No answers were saved for this response.
+                        No answers available for this response.
                       </p>
                     ) : (
                       answers.map((answer, answerIndex) => {
@@ -174,7 +184,7 @@ function Response() {
                       })
                     )}
                   </div>
-                </article>
+                </details>
               );
             })}
           </div>
