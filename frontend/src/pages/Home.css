@@ -340,7 +340,18 @@
   border: 1px solid rgb(255 107 107 / 30%);
   color: #ff7777;
 }
+.home {
+  margin-left: 220px;
+  padding: 2rem;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
 
+@media (max-width: 768px) {
+  .home {
+    margin-left: 75px;
+  }
+}
 /* Responsive Design */
 @media (max-width: 1000px) {
   .home__content {

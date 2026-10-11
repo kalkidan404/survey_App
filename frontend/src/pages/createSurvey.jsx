@@ -5,7 +5,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { QuestionCard } from "../components/QuestionCard";
 import "./CreateSurvey.css";
-
+import "../components/sideSetting"
+import { SideSetting } from "../components/sideSetting";
 function CreateSurvey() {
   const navigate = useNavigate();
 
@@ -192,6 +193,7 @@ function CreateSurvey() {
 
   return (
     <main className="create-survey">
+      <SideSetting/>
       <header className="create-survey__header">
         <h1 className="create-survey__title">Create a Survey</h1>
         <p className="create-survey__description">

@@ -1,5 +1,7 @@
+
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import "./SideSetting.css";
 
 function SideSetting() {
   const navigate = useNavigate();
@@ -41,15 +43,28 @@ function SideSetting() {
   };
 
   return (
-    <>
+    <aside className="side-setting">
+      <div className="side-setting__logo">FormIt</div>
+
       <Link to="/home">Dashboard</Link>
 
-      <Link to="/profile">
-        {user?.name?.charAt(0).toUpperCase() || "P"}
-      </Link>
+      <div className="side-setting__profile">
+        <Link
+          to="/profile"
+          className="side-setting__avatar"
+          aria-label="Profile"
+        >
+          {user?.firstName?.charAt(0).toUpperCase() || "P"}
+        </Link>
+      </div>
 
-      <button onClick={handleLogout}>Logout</button>
-    </>
+      <button
+        className="side-setting__logout"
+        onClick={handleLogout}
+      >
+        Logout
+      </button>
+    </aside>
   );
 }
 

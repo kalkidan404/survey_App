@@ -282,6 +282,19 @@
   padding: 1rem 1.25rem;
 }
 
+.responses {
+  margin-left: 220px;
+  padding: 2rem;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .responses {
+    margin-left: 75px;
+  }
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .responses {

@@ -147,6 +147,20 @@
   text-decoration: underline;
 }
 
+.profile {
+  margin-left: 220px;
+  padding: 2rem;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .profile {
+    margin-left: 75px;
+  }
+}
+
+
 /* Responsive design */
 @media (max-width: 600px) {
   .profile {

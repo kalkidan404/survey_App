@@ -260,6 +260,20 @@
   transform: translateY(-1px);
 }
 
+.create-survey {
+  margin-left: 220px;
+  padding: 2rem;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .create-survey {
+    margin-left: 75px;
+  }
+}
+
+
 /* ============================
    RESPONSIVE DESIGN
 ============================ */

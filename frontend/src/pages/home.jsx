@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Home.css";
-
+import SideSetting from "../components/sideSetting";
 function Home() {
 const [user, setUser] = useState(null);
 const [search, setSearch] = useState("");
@@ -90,7 +90,9 @@ const displayedSurveys = (showAll ? surveys : recentSurveys).filter(
 (survey) => survey.title.toLowerCase().includes(search.toLowerCase())
 );
 
-return ( <main className="home"> <header className="home__header"> <div> <h2 className="home__welcome">
+return ( <main className="home"> 
+<SideSetting />
+<header className="home__header"> <div> <h2 className="home__welcome">
 Welcome back{user?.firstName ? `, ${user.firstName}` : ""}!! </h2> </div>
 
 

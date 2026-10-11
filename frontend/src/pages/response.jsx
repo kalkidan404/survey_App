@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import "./Response.css";
-
+import { SideSetting } from "../components/sideSetting";
 function Response() {
   const { id } = useParams();
 
@@ -66,6 +66,7 @@ function Response() {
 
   return (
     <main className="responses">
+      <SideSetting/>
       <header className="responses__header">
         <div>
           <p className="responses__eyebrow">SURVEY RESULTS</p>

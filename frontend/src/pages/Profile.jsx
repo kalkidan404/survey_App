@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Profile.css";
-
+import "../components/sideSetting";
+import { SideSetting } from "../components/sideSetting";
 function Profile() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -64,6 +65,7 @@ function Profile() {
 
   return (
     <main className="profile">
+      <SideSetting/>
       <header className="profile__header">
         <div>
           <h1 className="profile__title">My Profile</h1>
