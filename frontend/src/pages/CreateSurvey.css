@@ -112,6 +112,32 @@
   background-color: #181818;
   color: #ffffff;
 }
+/* Survey Description Textarea */
+.create-survey__textarea {
+  min-height: 120px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.create-survey__textarea::placeholder {
+  color: #777777;
+}
+
+/* Optional Description Label */
+.create-survey__label span {
+  color: #888888;
+  font-size: 12px;
+  font-weight: 400;
+  margin-left: 4px;
+}
+
+/* Description Hint */
+.create-survey__description-hint {
+  margin: 8px 0 0;
+  color: #888888;
+  font-size: 13px;
+  line-height: 1.5;
+}
 
 /* ============================
    ANSWER OPTIONS

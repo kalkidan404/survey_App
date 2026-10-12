@@ -1,187 +1,385 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { QuestionCard } from "../components/QuestionCard";
+import "./CreateSurvey.css";
+import SideSetting from "../components/sideSetting";
 
-import prisma from "../config/prisma.js";
+function CreateSurvey() {
+const navigate = useNavigate();
 
-// Create a survey
-const createSurvey = async (req, res, next) => {
-  try {
-    const { title } = req.body;
+const [title, setTitle] = useState("");
+const [description, setDescription] = useState("");
+const [questions, setQuestions] = useState([]);
+const [questionText, setQuestionText] = useState("");
+const [questionType, setQuestionType] = useState("MULTIPLE_CHOICE");
+const [options, setOptions] = useState(["", ""]);
 
-    if (!title || !title.trim()) {
-      return res.status(400).json({
-        message: "Survey title is required",
-      });
-    }
+const addOption = () => {
+setOptions((currentOptions) => [...currentOptions, ""]);
+};
 
-    const survey = await prisma.survey.create({
-      data: {
+const updateOption = (index, value) => {
+setOptions((currentOptions) =>
+currentOptions.map((option, i) =>
+i === index ? value : option
+)
+);
+};
+
+const removeOption = (index) => {
+setOptions((currentOptions) =>
+currentOptions.filter((_, i) => i !== index)
+);
+};
+
+const addQuestion = () => {
+if (!questionText.trim()) {
+alert("Please enter a question.");
+return;
+}
+
+
+const questionOptions =
+  questionType === "MULTIPLE_CHOICE" ||
+  questionType === "CHECKBOX"
+    ? options
+        .filter((option) => option.trim())
+        .map((option, index) => ({
+          id: `${index}`,
+          text: option.trim(),
+        }))
+    : [];
+
+if (
+  (questionType === "MULTIPLE_CHOICE" ||
+    questionType === "CHECKBOX") &&
+  questionOptions.length < 2
+) {
+  alert("Please add at least two answer options.");
+  return;
+}
+
+const question = {
+  id: crypto.randomUUID(),
+  text: questionText.trim(),
+  type: questionType,
+  options: questionOptions,
+};
+
+setQuestions((currentQuestions) => [
+  ...currentQuestions,
+  question,
+]);
+
+setQuestionText("");
+setQuestionType("MULTIPLE_CHOICE");
+setOptions(["", ""]);
+
+
+};
+
+const editQuestion = (questionId) => {
+const question = questions.find(
+(item) => item.id === questionId
+);
+
+
+if (!question) return;
+
+setQuestionText(question.text);
+setQuestionType(question.type);
+
+setOptions(
+  question.options.length > 0
+    ? question.options.map((option) => option.text)
+    : ["", ""]
+);
+
+setQuestions((currentQuestions) =>
+  currentQuestions.filter((item) => item.id !== questionId)
+);
+
+
+};
+
+const deleteQuestion = (questionId) => {
+setQuestions((currentQuestions) =>
+currentQuestions.filter(
+(question) => question.id !== questionId
+)
+);
+};
+
+const createSurvey = async () => {
+try {
+if (!title.trim()) {
+alert("Please enter a survey title.");
+return;
+}
+
+
+  if (questions.length === 0) {
+    alert("Please add at least one question.");
+    return;
+  }
+
+  const surveyResponse = await fetch(
+    `${import.meta.env.VITE_API_URL}/surveys`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
         title: title.trim(),
-        userId: req.user.id,
-      },
-    });
+        description: description.trim() || null,
+      }),
+    }
+  );
 
-    return res.status(201).json({ survey });
-  } catch (error) {
-    next(error);
+  const surveyData = await surveyResponse.json();
+
+  if (!surveyResponse.ok) {
+    throw new Error(
+      surveyData.message || "Failed to create survey."
+    );
   }
-};
 
-// Get all surveys belonging to the logged-in user
-const getMySurveys = async (req, res, next) => {
-  try {
-    const surveys = await prisma.survey.findMany({
-      where: {
-        userId: req.user.id,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      include: {
-        _count: {
-          select: {
-            responses: true,
-          },
-        },
-      },
-    });
+  const surveyId = surveyData.survey.id;
 
-    return res.status(200).json({ surveys });
-  } catch (error) {
-    next(error);
-  }
-};
+  for (const question of questions) {
+    const questionResponse = await fetch(
+      `${import.meta.env.VITE_API_URL}/questions`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          surveyId,
+          title: question.text,
+          text: question.text,
+        }),
+      }
+    );
 
-// Get the six most recent surveys for the dashboard
-const getRecentSurveys = async (req, res, next) => {
-  try {
-    const surveys = await prisma.survey.findMany({
-      where: {
-        userId: req.user.id,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      take: 6,
-      include: {
-        _count: {
-          select: {
-            responses: true,
-          },
-        },
-      },
-    });
+    const questionData = await questionResponse.json();
 
-    return res.status(200).json({ surveys });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// Get one survey by ID
-
-const getSurveyById = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-
-    const survey = await prisma.survey.findUnique({
-      where: { id },
-      include: {
-        questions: {
-          include: {
-            options: true,
-          },
-        },
-      },
-    });
-
-    if (!survey) {
-      return res.status(404).json({
-        message: "Survey not found",
-      });
+    if (!questionResponse.ok) {
+      throw new Error(
+        questionData.message || "Failed to save question."
+      );
     }
 
-    return res.status(200).json({ survey });
-  } catch (error) {
-    next(error);
+    const questionId = questionData.question.id;
+
+    for (const option of question.options) {
+      const optionResponse = await fetch(
+        `${import.meta.env.VITE_API_URL}/options/question/${questionId}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ text: option.text }),
+        }
+      );
+
+      const optionData = await optionResponse.json();
+
+      if (!optionResponse.ok) {
+        throw new Error(
+          optionData.message || "Failed to save option."
+        );
+      }
+    }
   }
+
+  navigate(`/surveys/${surveyId}`);
+} catch (error) {
+  console.error(error);
+  alert(error.message || "Failed to create survey.");
+}
+
+
 };
 
-// Update a survey
-const updateSurvey = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const { title, isActive } = req.body;
+return ( <main className="create-survey"> <SideSetting />
 
-    const existingSurvey = await prisma.survey.findFirst({
-      where: {
-        id,
-        userId: req.user.id,
-      },
-    });
 
-    if (!existingSurvey) {
-      return res.status(404).json({
-        message: "Survey not found",
-      });
-    }
+  <header className="create-survey__header">
+    <h1 className="create-survey__title">Create a Survey</h1>
+    <p className="create-survey__description">
+      Build your survey by adding questions and answer options.
+    </p>
+  </header>
 
-    const data = {};
+  <section className="create-survey__details">
+    <label
+      htmlFor="survey-title"
+      className="create-survey__label"
+    >
+      Survey Title
+    </label>
 
-    if (typeof title === "string" && title.trim()) {
-      data.title = title.trim();
-    }
+    <input
+      id="survey-title"
+      className="create-survey__input"
+      type="text"
+      placeholder="Enter your survey title"
+      value={title}
+      onChange={(event) => setTitle(event.target.value)}
+    />
 
-    if (typeof isActive === "boolean") {
-      data.isActive = isActive;
-    }
+    <label
+      htmlFor="survey-description"
+      className="create-survey__label"
+    >
+      Survey Description <span>(Optional)</span>
+    </label>
 
-    if (Object.keys(data).length === 0) {
-      return res.status(400).json({
-        message: "Provide a valid title or survey status to update",
-      });
-    }
+    <textarea
+      id="survey-description"
+      className="create-survey__input create-survey__textarea"
+      placeholder="Explain what your survey is about and why you're conducting it..."
+      value={description}
+      onChange={(event) => setDescription(event.target.value)}
+      rows={4}
+    />
 
-    const survey = await prisma.survey.update({
-      where: { id },
-      data,
-    });
+    <p className="create-survey__description-hint">
+      Help participants understand the purpose of your survey
+      before they begin.
+    </p>
+  </section>
 
-    return res.status(200).json({ survey });
-  } catch (error) {
-    next(error);
-  }
-};
+  <section className="create-survey__question-form">
+    <h2 className="create-survey__section-title">
+      Add a Question
+    </h2>
 
-// Delete a survey
-const deleteSurvey = async (req, res, next) => {
-  try {
-    const { id } = req.params;
+    <label
+      htmlFor="question-text"
+      className="create-survey__label"
+    >
+      Question
+    </label>
 
-    const result = await prisma.survey.deleteMany({
-      where: {
-        id,
-        userId: req.user.id,
-      },
-    });
+    <input
+      id="question-text"
+      className="create-survey__input"
+      type="text"
+      placeholder="Enter your question"
+      value={questionText}
+      onChange={(event) => setQuestionText(event.target.value)}
+    />
 
-    if (result.count === 0) {
-      return res.status(404).json({
-        message: "Survey not found",
-      });
-    }
+    <label
+      htmlFor="question-type"
+      className="create-survey__label"
+    >
+      Question Type
+    </label>
 
-    return res.status(200).json({
-      message: "Survey deleted successfully",
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+    <select
+      id="question-type"
+      className="create-survey__input"
+      value={questionType}
+      onChange={(event) => setQuestionType(event.target.value)}
+    >
+      <option value="MULTIPLE_CHOICE">Multiple Choice</option>
+      <option value="CHECKBOX">Checkboxes</option>
+      <option value="TEXT">Short Answer</option>
+    </select>
 
-export {
-  createSurvey,
-  getMySurveys,
-  getRecentSurveys,
-  getSurveyById,
-  updateSurvey,
-  deleteSurvey,
-};
+    {(questionType === "MULTIPLE_CHOICE" ||
+      questionType === "CHECKBOX") && (
+      <div className="create-survey__options">
+        <label className="create-survey__label">
+          Answer Options
+        </label>
+
+        {options.map((option, index) => (
+          <div
+            className="create-survey__option-row"
+            key={index}
+          >
+            <input
+              className="create-survey__input"
+              type="text"
+              placeholder={`Option ${index + 1}`}
+              value={option}
+              onChange={(event) =>
+                updateOption(index, event.target.value)
+              }
+            />
+
+            {options.length > 2 && (
+              <button
+                type="button"
+                className="create-survey__remove-option"
+                onClick={() => removeOption(index)}
+              >
+                Remove
+              </button>
+            )}
+          </div>
+        ))}
+
+        <button
+          type="button"
+          className="create-survey__secondary-button"
+          onClick={addOption}
+        >
+          + Add Option
+        </button>
+      </div>
+    )}
+
+    <button
+      type="button"
+      className="create-survey__add-question"
+      onClick={addQuestion}
+    >
+      Add Question
+    </button>
+  </section>
+
+  <section className="create-survey__questions">
+    <h2 className="create-survey__section-title">
+      Your Questions ({questions.length})
+    </h2>
+
+    {questions.length === 0 ? (
+      <p className="create-survey__empty">
+        Your questions will appear here when you add them.
+      </p>
+    ) : (
+      questions.map((question, index) => (
+        <QuestionCard
+          key={question.id}
+          questionNumber={index + 1}
+          totalQuestions={questions.length}
+          question={question.text}
+          questionType={question.type.replaceAll("_", " ")}
+          options={question.options}
+          onEdit={() => editQuestion(question.id)}
+          onDelete={() => deleteQuestion(question.id)}
+        />
+      ))
+    )}
+  </section>
+
+  <footer className="create-survey__footer">
+    <button
+      type="button"
+      className="create-survey__publish"
+      onClick={createSurvey}
+    >
+      Create Survey
+    </button>
+  </footer>
+</main>
+
+
+);
+}
+
+export default CreateSurvey;
