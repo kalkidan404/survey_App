@@ -10,7 +10,6 @@ const createResponse = async (req, res, next) => {
     const response = await prisma.response.create({
       data: {
         surveyId,
-        userId: req.user.id,
 
         answers: {
           create: (answers || []).map((answer) => ({
