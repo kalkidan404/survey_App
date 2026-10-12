@@ -21,6 +21,9 @@
 .side-setting__logout:hover{
   background-color:#a3e600;
 }
+.side-setting__profile:hover{
+  background-color:#7fb300;
+}
 .side-setting__avatar:active{
   background-color:#7fb300;
 }
