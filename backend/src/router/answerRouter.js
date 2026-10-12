@@ -9,7 +9,7 @@ import {
   deleteAnswer,
 } from "../controller/answerController.js";
 import authMiddleware from "../middleware/authMiddleware.js";
-route.post("/response/:responseId",authMiddleware, addAnswer);
+route.post("/response/:responseId", addAnswer);
 
 route.get("/:id",authMiddleware, getAnswer);
 
