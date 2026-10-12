@@ -1,16 +1,14 @@
-
-// template to put question in
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { QuestionCard } from "../components/QuestionCard";
 import "./CreateSurvey.css";
-import "../components/sideSetting"
-import  SideSetting  from "../components/sideSetting";
+import SideSetting from "../components/sideSetting";
+
 function CreateSurvey() {
   const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [questions, setQuestions] = useState([]);
   const [questionText, setQuestionText] = useState("");
   const [questionType, setQuestionType] = useState("MULTIPLE_CHOICE");
@@ -124,7 +122,10 @@ function CreateSurvey() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
-          body: JSON.stringify({ title: title.trim() }),
+          body: JSON.stringify({
+            title: title.trim(),
+            description: description.trim() || null,
+          }),
         }
       );
 
@@ -193,9 +194,11 @@ function CreateSurvey() {
 
   return (
     <main className="create-survey">
-      <SideSetting/>
+      <SideSetting />
+
       <header className="create-survey__header">
         <h1 className="create-survey__title">Create a Survey</h1>
+
         <p className="create-survey__description">
           Build your survey by adding questions and answer options.
         </p>
@@ -217,6 +220,27 @@ function CreateSurvey() {
           value={title}
           onChange={(event) => setTitle(event.target.value)}
         />
+
+        <label
+          htmlFor="survey-description"
+          className="create-survey__label"
+          style={{ marginTop: "20px" }}
+        >
+          Survey Description <span>(Optional)</span>
+        </label>
+
+        <textarea
+          id="survey-description"
+          className="create-survey__input create-survey__textarea"
+          placeholder="Describe your survey and explain its purpose..."
+          value={description}
+          onChange={(event) => setDescription(event.target.value)}
+          rows={4}
+        />
+
+        <p className="create-survey__description-hint">
+          Help participants understand what your survey is about.
+        </p>
       </section>
 
       <section className="create-survey__question-form">
