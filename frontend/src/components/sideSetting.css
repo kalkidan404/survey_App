@@ -14,7 +14,16 @@
   box-sizing: border-box;
   z-index: 1000;
 }
-
+.side-setting__logout{
+  margin-top: 0.5rem;
+  background-color:#c6ff33;
+}
+.side-setting__logout:hover{
+  background-color:#a3e600;
+}
+.side-setting__avatar:active{
+  background-color:#7fb300;
+}
 .side-setting__logo {
   color: #c6ff33;
   font-size: 1.6rem;
