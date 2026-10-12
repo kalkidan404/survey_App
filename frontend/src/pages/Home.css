@@ -346,6 +346,15 @@
   min-height: 100vh;
   box-sizing: border-box;
 }
+.home__search-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  background-color: #c6ff33;
+  border-radius: 4px;
+  font-size: 14px;
+}
 
 @media (max-width: 768px) {
   .home {

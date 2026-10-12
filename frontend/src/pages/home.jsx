@@ -128,7 +128,8 @@ Welcome back{user?.firstName ? `, ${user.firstName}` : ""}!! </h2> </div>
         <div className="home__section-header">
           <h3 className="home__section-title">Your Surveys</h3>
 
-          <input
+          <input 
+          className="home__search-input"
             type="text"
             placeholder="Search surveys..."
             value={search}
